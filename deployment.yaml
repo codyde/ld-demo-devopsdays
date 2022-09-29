@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: devopsdays-1
+  namespace: devopsdays-1
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devopsdays-1
+  namespace: devopsdays-1
+  labels:
+    app: devopsdays-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devopsdays-1
+  template:
+    metadata:
+      labels:
+        app: devopsdays-1
+    spec:
+      containers:
+        - name: devopsdays-1
+          image: codydearkland/ld-demo-devopsdays:1
+          imagePullPolicy: Always
+          ports:
+            - name: web
+              containerPort: 3000
+              protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  namespace: devopsdays-1
+  name: forrester-lb
+spec:
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: devopsdays-1
+  type: LoadBalancer
